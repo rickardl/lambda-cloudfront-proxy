@@ -82,20 +82,6 @@ export class ExampleSourceDelegate implements SourceDelegate {
 
 This section displays the requirements and limitations of the Lambda@Edge Proxy.
 
-### Resources
-
-The following resources are required in order to successfully deploy Lambda@Edge proxy.
-
-* a CloudFront distribution
-* an S3 bucket with a semi-random name
-* an Origin Access Identity
-* an S3 bucket policy that grants the CloudFront distribution read access objects in the S3 bucket
-* a Lambda function to perform URI Origin selection and rewriting (this project)
-* Route 53 Record with matching ACM certificate
-* an IAM execution role for the Lambda function
-
-This will be provided in a upcoming Terraform that deploys the above and deploys a version of a Lambda built using this framework.
-
 ### No environment for Lamba@Edge
 
 The configuration must be hardwired in the code or read from an S3 Bucket, as no environment variable is supported.
