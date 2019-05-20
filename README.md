@@ -2,6 +2,9 @@
 
 Lambda@Edge opens a number of other very interesting use cases. Unfortunately, documentation is still poor, examples not so useful and tooling support non-existent or sparse, this is why we developed this module, it's written in Typescript and uses Yarn and Rollup for builds.
 
+![cloud_front_distribution](docs/assets/cloudfront_distribution.png)
+
+
 Lambda@Edge allows running Lambda functions at Edge Locations of the CloudFront CDN. It means you may add “intelligence” in the CDN, without having to forward the request to a backend and losing benefits of content caching and geographical proximity with the client.
 
 ## Why Lambda@Edge
@@ -78,8 +81,6 @@ export class ExampleSourceDelegate implements SourceDelegate {
 ## Requirements and Limitations
 
 This section displays the requirements and limitations of the Lambda@Edge Proxy.
-
-![cloud_front_distribution](docs/assets/cloudfront_distribution.png)
 
 ### Resources
 
