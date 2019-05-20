@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "target": "ES2015",
+    "module": "commonjs",
+    "allowJs": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "moduleResolution": "node",
+    "esModuleInterop": true
+  }
+}
