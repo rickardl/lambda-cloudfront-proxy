@@ -96,14 +96,6 @@ The following resources are required in order to successfully deploy Lambda@Edge
 
 This will be provided in a upcoming Terraform that deploys the above and deploys a version of a Lambda built using this framework.
 
-### Global / N.Virginia AWS Region only
-
-Lambda functions must be created in us-east-1 Region to be attached to CloudFront Distributions.
-
-This is the same restriction that applies to other attached to the global CDN, like SSL certificates stored in Amazon Certificate Managers to use https on custom domains.
-
-Make sure you deploy any resources in those regions if you want to interact with the Lambda@Edge.
-
 ### No environment for Lamba@Edge
 
 The configuration must be hardwired in the code or read from an S3 Bucket, as no environment variable is supported.
@@ -134,15 +126,6 @@ A forwarded cookie becomes part of the cache key, along with the object URI, reg
 
 The Behavior must Forward the X-Source cookie, as a whitelist. This cookie becomes part of the cache key.
 
-### Cache invalidation drops all versions of an object
-
-Invalidation is by URI only. There is no way of invalidating a single version of an object (e.g. associated with one X-Source=Experiment)
-
-### Deleting functions used as Lambda@Edge
-
-You cannot delete a Lambda function while it is associated with a CloudFront Distribution. AS this might not be obviously, you have to wait the function is completely removed from CDN replication before deleting it.
-
-You can read into more details here, in the [AWS Documentation](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/HowToDeleteDistribution.html)
 
 ## Todo / WIP
 
