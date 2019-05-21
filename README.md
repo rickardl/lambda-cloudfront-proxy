@@ -4,7 +4,6 @@ Lambda@Edge opens a number of other very interesting use cases. Unfortunately, d
 
 ![cloud_front_distribution](docs/assets/cloudfront_distribution.png)
 
-
 Lambda@Edge allows running Lambda functions at Edge Locations of the CloudFront CDN. It means you may add “intelligence” in the CDN, without having to forward the request to a backend and losing benefits of content caching and geographical proximity with the client.
 
 ## Why Lambda@Edge
@@ -17,11 +16,11 @@ A typical deployment would see this Lambda@Edge Proxy being deployed for Canary 
 
 This solution allows leveraging CDN caching, keeping both versions of content in the cache, and removes the need for the application to know about or support the behavior of Canary Deployments.
 
-This could either be directly set by a Cookie, or a query parameter, such as https://service.telia.io?release=1.0.0-h32434a-201905151232-rickard-test, which would serve the contents of the folder `/1.0.0-h32434a-201905151232-rickard-test`in the S3 Bucket, togehter with a compatible on `/api/` using either Headers or URL-rewrite.
+This could either be directly set by a Cookie, or a query parameter, such as <https://service.telia.io?release=1.0.0-h32434a-201905151232-rickard-test>, which would serve the contents of the folder `/1.0.0-h32434a-201905151232-rickard-test`in the S3 Bucket, together with a compatible on `/api/` using either Headers or URL-rewrite.
 
 ## Installation
 
-Use the package manager [yarn](https://yarnpkg.com/en/) to install all the depedencies of `lambda-cloudfront-proxy`.
+Use the package manager [yarn](https://yarnpkg.com/en/) to install all the dependencies of `lambda-cloudfront-proxy`.
 
 ```bash
 make install
@@ -82,7 +81,7 @@ export class ExampleSourceDelegate implements SourceDelegate {
 
 This section displays the requirements and limitations of the Lambda@Edge Proxy.
 
-### No environment for Lamba@Edge
+### No environment for Lambda@Edge
 
 The configuration must be hardwired in the code or read from an S3 Bucket, as no environment variable is supported.
 
@@ -104,14 +103,13 @@ If you change the Origin, don’t forget to change the `Host` header accordingly
 
 The request Origin may be changed only in Origin Request, not in Viewer Request. This way the response get always cached.
 
-Do not forget to set up the Default Behaviour to forward the element you are using for deciding the Origin (the cookie or request body), or the Origin Request function would not receive it.
+Do not forget to set up the Default Behavior to forward the element you are using for deciding the Origin (the cookie or request body), or the Origin Request function would not receive it.
 
 ### Forwarded Cookies are part of the cache key
 
 A forwarded cookie becomes part of the cache key, along with the object URI, regardless the Origin is ignoring it (e.g. S3).
 
 The Behavior must Forward the X-Source cookie, as a whitelist. This cookie becomes part of the cache key.
-
 
 ## Todo / WIP
 
