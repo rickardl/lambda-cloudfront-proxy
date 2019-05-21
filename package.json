@@ -7,7 +7,7 @@
     "prepare": "yarn build",
     "build:watch": "rollup -c -w",
     "build": "rollup -c",
-    "test": "jest && yarn build"
+    "test": "jest"
   },
   "author": "",
   "license": "MIT",

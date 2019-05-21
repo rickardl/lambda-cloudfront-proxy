@@ -22,9 +22,33 @@ This could either be directly set by a Cookie, or a query parameter, such as <ht
 
 Use the package manager [yarn](https://yarnpkg.com/en/) to install all the dependencies of `lambda-cloudfront-proxy`.
 
-```bash
+```shell
 make install
 ```
+
+## Build and Deploy
+
+```shell
+ make build
+```
+
+This project produces the following Lambda@Edge functions in JavaScript used in the life-cycle of a request.
+
+* After CloudFront receives a request from a viewer (viewer request)
+* Before CloudFront forwards the request to the origin (origin request)
+* After CloudFront receives the response from the origin (origin response)
+* Before CloudFront forwards the response to the viewer (viewer response)
+
+The output will output the three lambdas in the `./dist` directory.
+
+```shell
+./dist/
+├── origin-request.js
+├── origin-response.js
+└── viewer-request.js
+```
+
+Use any tooling you feel necessary to deploy this into your environment.
 
 ## Usage
 
