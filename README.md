@@ -135,6 +135,12 @@ A forwarded cookie becomes part of the cache key, along with the object URI, reg
 
 The Behavior must Forward the X-Source cookie, as a whitelist. This cookie becomes part of the cache key.
 
+### Redirect Behavior for S3 Origin
+
+You need to modifiy the behavior of the S3 bucket origin, in order to re-direct 404 errors from the S3 Bucket Origin not finding the requsted resource, otherwise you will not be able to use the SPA's routing, since the behavior by default looks for the resource.
+
+The easiest way to do othat is to re-direct everything to `index.html`, you will still be able to respond with HTTP Error codes from within your routing library.
+
 ## Todo / WIP
 
 * Terraform
