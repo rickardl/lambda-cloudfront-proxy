@@ -1,0 +1,35 @@
+{
+  "name": "lambda-cloudfront-proxy",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "prepare": "yarn build",
+    "build:watch": "rollup -c -w",
+    "build": "rollup -c",
+    "test": "jest"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.25",
+    "@types/jest": "^24.0.13",
+    "@typescript-eslint/parser": "^1.9.0",
+    "babel-jest": "^24.8.0",
+    "eslint": "^5.16.0",
+    "eslint-config-prettier": "^4.3.0",
+    "eslint-plugin-prettier": "^3.1.0",
+    "jest": "^24.8.0",
+    "prettier": "^1.17.1",
+    "rollup": "^1.11.3",
+    "rollup-plugin-eslint": "^5.1.0",
+    "rollup-plugin-terser": "^4.0.4",
+    "rollup-plugin-typescript": "^1.0.1",
+    "ts-jest": "^24.0.2",
+    "typescript": "^3.4.5"
+  },
+  "files": [
+    "dist"
+  ]
+}

@@ -1,8 +1,10 @@
 # lambda-cloudfront-proxy (WIP)
 
-Lambda@Edge opens a number of other very interesting use cases. Unfortunately, documentation is still poor, examples not so useful and tooling support non-existent or sparse, this is why we developed this module, it's written in Typescript and uses Yarn and Rollup for builds.
-
 Lambda@Edge allows running Lambda functions at Edge Locations of the CloudFront CDN. It means you may add “intelligence” in the CDN, without having to forward the request to a backend and losing benefits of content caching and geographical proximity with the client.
+
+![cloud_front_distribution](docs/assets/cloudfront_distribution.png)
+
+Lambda@Edge opens a number of very interesting use cases. Unfortunately, documentation is still poor, examples not so useful and tooling support non-existent or sparse, this is why we developed this module, it's written in Typescript and uses Yarn and Rollup for builds.
 
 ## Why Lambda@Edge
 
@@ -14,15 +16,39 @@ A typical deployment would see this Lambda@Edge Proxy being deployed for Canary 
 
 This solution allows leveraging CDN caching, keeping both versions of content in the cache, and removes the need for the application to know about or support the behavior of Canary Deployments.
 
-This could either be directly set by a Cookie, or a query parameter, such as https://service.telia.io?release=1.0.0-h32434a-201905151232-rickard-test, which would serve the contents of the folder `/1.0.0-h32434a-201905151232-rickard-test`in the S3 Bucket, togehter with a compatible on `/api/` using either Headers or URL-rewrite.
+This could either be directly set by a Cookie, or a query parameter, such as <https://service.telia.io?release=1.0.0-h32434a-201905151232-rickard-test>, which would serve the contents of the folder `/1.0.0-h32434a-201905151232-rickard-test`in the S3 Bucket, together with a compatible on `/api/` using either Headers or URL-rewrite.
 
 ## Installation
 
-Use the package manager [yarn](https://yarnpkg.com/en/) to install all the depedencies of `lambda-cloudfront-proxy`.
+Use the package manager [yarn](https://yarnpkg.com/en/) to install all the dependencies of `lambda-cloudfront-proxy`.
 
-```bash
+```shell
 make install
 ```
+
+## Build and Deploy
+
+```shell
+ make build
+```
+
+This project produces the following Lambda@Edge functions in JavaScript used in the life-cycle of a request.
+
+* After CloudFront receives a request from a viewer (viewer request)
+* Before CloudFront forwards the request to the origin (origin request)
+* After CloudFront receives the response from the origin (origin response)
+* Before CloudFront forwards the response to the viewer (viewer response)
+
+The output will output the three lambdas in the `./dist` directory.
+
+```shell
+./dist/
+├── origin-request.js
+├── origin-response.js
+└── viewer-request.js
+```
+
+Use any tooling you feel necessary to deploy this into your environment.
 
 ## Usage
 
@@ -79,31 +105,7 @@ export class ExampleSourceDelegate implements SourceDelegate {
 
 This section displays the requirements and limitations of the Lambda@Edge Proxy.
 
-![cloud_front_distribution](docs/assets/cloudfront_distribution.png)
-
-### Resources
-
-The following resources are required in order to successfully deploy Lambda@Edge proxy.
-
-* a CloudFront distribution
-* an S3 bucket with a semi-random name
-* an Origin Access Identity
-* an S3 bucket policy that grants the CloudFront distribution read access objects in the S3 bucket
-* a Lambda function to perform URI Origin selection and rewriting (this project)
-* Route 53 Record with matching ACM certificate
-* an IAM execution role for the Lambda function
-
-This will be provided in a upcoming Terraform that deploys the above and deploys a version of a Lambda built using this framework.
-
-### Global / N.Virginia AWS Region only
-
-Lambda functions must be created in us-east-1 Region to be attached to CloudFront Distributions.
-
-This is the same restriction that applies to other attached to the global CDN, like SSL certificates stored in Amazon Certificate Managers to use https on custom domains.
-
-Make sure you deploy any resources in those regions if you want to interact with the Lambda@Edge.
-
-### No environment for Lamba@Edge
+### No environment for Lambda@Edge
 
 The configuration must be hardwired in the code or read from an S3 Bucket, as no environment variable is supported.
 
@@ -125,7 +127,7 @@ If you change the Origin, don’t forget to change the `Host` header accordingly
 
 The request Origin may be changed only in Origin Request, not in Viewer Request. This way the response get always cached.
 
-Do not forget to set up the Default Behaviour to forward the element you are using for deciding the Origin (the cookie or request body), or the Origin Request function would not receive it.
+Do not forget to set up the Default Behavior to forward the element you are using for deciding the Origin (the cookie or request body), or the Origin Request function would not receive it.
 
 ### Forwarded Cookies are part of the cache key
 
@@ -133,15 +135,11 @@ A forwarded cookie becomes part of the cache key, along with the object URI, reg
 
 The Behavior must Forward the X-Source cookie, as a whitelist. This cookie becomes part of the cache key.
 
-### Cache invalidation drops all versions of an object
+### Redirect Behavior for S3 Origin
 
-Invalidation is by URI only. There is no way of invalidating a single version of an object (e.g. associated with one X-Source=Experiment)
+You need to modifiy the behavior of the S3 bucket origin, in order to re-direct 404 errors from the S3 Bucket Origin not finding the requsted resource, otherwise you will not be able to use the SPA's routing, since the behavior by default looks for the resource.
 
-### Deleting functions used as Lambda@Edge
-
-You cannot delete a Lambda function while it is associated with a CloudFront Distribution. AS this might not be obviously, you have to wait the function is completely removed from CDN replication before deleting it.
-
-You can read into more details here, in the [AWS Documentation](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/HowToDeleteDistribution.html)
+The easiest way to do othat is to re-direct every error to `index.html` in Behaviors, you will still be able to respond with HTTP Error codes from within your routing library.
 
 ## Todo / WIP
 
